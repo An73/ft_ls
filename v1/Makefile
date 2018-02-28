@@ -2,7 +2,7 @@ NAME = ft_ls
 
 LBMK = make -C libft/ fclean && make -C libft/
 
-SRCS = ft_ls.c recursion.c print_l.c
+SRCS = ft_ls.c recursion.c print_l.c print_l_link.c pre.c little_r.c litt_big_r.c
 
 GCCO = gcc -Wall -Wextra -Werror -c $(SRCS) -Ift_ls.h
 GCC = gcc -Wall -Wextra -Werror *.o ./libft/libft.a -o ft_ls

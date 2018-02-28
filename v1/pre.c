@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	pre(t_pre *pre, char *direct)
+void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 {
 	DIR *dir;
 	struct dirent *sd;
@@ -25,16 +25,32 @@ void	pre(t_pre *pre, char *direct)
 		ft_printf("Error_dir.\n");
 		exit(1);
 	}
-	if (flag->no_dir != 1)
-		ft_printf("%s:\n", direct);
-	flag->no_dir = 0;
 	while ( (sd=readdir(dir)) != NULL)
 	{
-		if (l_xattr(direct) == 1)
-			pre->xtr = 1;
+		if (flag->fl_a == 1 || sd->d_name[0] != '.')
+		{
+			stat(putb(direct, sd->d_name), &line);
+			if (l_xattr(direct) == 1)
+				pre->xtr = 1;
+			if (line.st_nlink > pre->nlink)
+				pre->nlink = line.st_nlink;
+			if (line.st_size > pre->size)
+				pre->size = line.st_size;
+			pre->block += line.st_blocks;
+		}
 	}
 	closedir(dir);
+}
 
+t_pre	pre_write(char *direct, t_flag *flag)
+{
+	t_pre pre;
+
+	pre.nlink = 0;
+	pre.size = 0;
+
+	pre_w(&pre, direct, flag);
+	return (pre);
 }
 
 

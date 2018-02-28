@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   recursion.c                                        :+:      :+:    :+:   */
+/*   litt_big_r.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dkotenko <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/22 12:38:54 by dkotenko          #+#    #+#             */
-/*   Updated: 2018/02/22 12:38:58 by dkotenko         ###   ########.fr       */
+/*   Created: 2018/02/27 17:09:55 by dkotenko          #+#    #+#             */
+/*   Updated: 2018/02/27 17:09:58 by dkotenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char	*putb(char *direct, char *d_name)
-{
-	direct = ft_strjoin(direct, "/");
-	direct = ft_strjoin(direct, d_name);
-	//ft_printf("%s\n", direct);
-	return (direct);
-}
+void 	Rec(char *direct, t_flag *flag, DIR *dir);
 
-void	recursion(char *direct, t_flag *flag)
+void	recursion_litt(char *direct, t_flag *flag)
 {
 	DIR *dir;
 	struct dirent *sd;
@@ -28,7 +22,6 @@ void	recursion(char *direct, t_flag *flag)
 	dir = opendir(direct);
 	if (dir == NULL)
 	{
-		return ;
 		ft_printf("Error_dir.\n");
 		exit(1);
 	}
@@ -39,9 +32,39 @@ void	recursion(char *direct, t_flag *flag)
 		else if (sd->d_type == 4 && sd->d_name[0] != '.'/*&& ft_printf("DIR = %s\n", sd->d_name)*/)
 		{
 			write(1, "\n", 1);
-			big_r(putb(direct, sd->d_name), flag);
+			litt_big_r(putb(direct, sd->d_name), flag);
 		}
 	}
 	closedir(dir);
 }
-//big_r(putb(direct, sd->d_name));
+
+void	litt_big_r(char *direct, t_flag *flag)
+{
+	//little_r(direct, flag);
+	DIR *dir;
+
+	dir = opendir(direct);
+	Rec(direct, flag, dir);
+	//recursion_litt(direct, flag);
+	//little_r(direct, flag);
+}
+
+
+void 	Rec(char *direct, t_flag *flag, DIR *dir)
+{
+	struct dirent *sd;
+	if ((sd=readdir(dir)) == NULL)
+	{
+		little_r(direct, flag);
+		return ;
+	}
+	Rec(direct, flag, dir);
+	if (sd->d_type == 4 && sd->d_name[0] != '.' && (dir = opendir(putb(direct, sd->d_name))))
+	{
+		Rec(putb(direct, sd->d_name), flag, dir);
+		closedir(dir);
+		//little_r(direct, flag);
+	}
+
+	//little_r(direct, flag);
+}

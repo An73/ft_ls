@@ -30,23 +30,38 @@ void	printer(char *direct, t_flag *flag)
 {
 	DIR *dir;
 	struct dirent *sd;
+	t_pre pre;
 
 	dir = opendir(direct);
-	if (dir == NULL)
-	{
-		ft_printf("Error_dir.\n");
-		exit(1);
-	}
 	if (flag->no_dir != 1)
 		ft_printf("%s:\n", direct);
 	flag->no_dir = 0;
+	if (dir == NULL)
+	{
+		/*if (flag->no_dir != 1)
+			ft_printf("%s:\n", direct);*/
+		return ;
+		ft_printf("Error_dir.\n");
+		exit(1);
+	}
+	pre = pre_write(direct, flag);
+	/*if (flag->no_dir != 1)
+		ft_printf("%s:\n", direct);
+	flag->no_dir = 0;*/
+	if (flag->fl_l == 1 && pre.size != 0)
+		ft_printf("total %d\n", pre.block);
 	while ( (sd=readdir(dir)) != NULL)
 	{
-		if (ft_strcmp(sd->d_name, ".") == 0 || ft_strcmp(sd->d_name, "..") == 0)
-			continue;
-		if (flag->fl_l == 1 && sd->d_name[0] != '.')
-			print_l(putb(direct, sd->d_name), sd->d_name);
-		else if (sd->d_name[0] != '.')
+		/*if (ft_strcmp(sd->d_name, ".") == 0 || ft_strcmp(sd->d_name, "..") == 0)
+			continue;*/
+		if (flag->fl_l == 1 && (flag->fl_a == 1 || sd->d_name[0] != '.'))
+		{
+			if (sd->d_type == 10)
+				print_l_link(putb(direct, sd->d_name), sd->d_name, &pre);
+			else
+				print_l(putb(direct, sd->d_name), sd->d_name, &pre);
+		}
+		else if (flag->fl_a == 1 || sd->d_name[0] != '.')
 			ft_printf("%s\n", sd->d_name);
 	}
 	closedir(dir);
@@ -72,7 +87,9 @@ int		main(int argc, char **argv)
 	if (argc == i)
 	{
 		flag.no_dir = 1;
-		if (flag.fl_R == 1)
+		if (flag.fl_r == 1)
+			little_r(".", &flag);
+		else if (flag.fl_R == 1)
 			big_r(".", &flag);
 		else if (flag.fl_l == 1)
 			printer(".", &flag);
@@ -83,8 +100,14 @@ int		main(int argc, char **argv)
 			flag.no_dir = 1;
 		while (argc > i)
 		{
-			if (flag.fl_R == 1)
+			if (flag.fl_R == 1 && flag.fl_r == 1)
+				litt_big_r(argv[i], &flag);
+			else if (flag.fl_R == 1)
 				big_r(argv[i], &flag);
+			else if (flag.fl_r == 1)
+				little_r(argv[i], &flag);
+			else /*if (flag.fl_l == 1)*/
+				printer(argv[i], &flag);
 			i++;
 		}
 	}
