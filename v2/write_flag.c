@@ -12,6 +12,26 @@
 
 #include "ft_ls.h"
 
+int		check_flag(char *arg)
+{
+	int	i;
+	int	check;
+
+	i = 1;
+	check = 1;
+
+	while (arg[i] != '\0' && check != 0)
+	{
+		if (arg[i] == 'l' || arg[i] == 'R' || arg[i] == 'a' ||\
+			arg[i] == 'r' || arg[i] == 't' || arg[i] == '1')
+			check = 1;
+		else
+			check = 0;
+		i++;
+	}
+	return (check);
+}
+
 void	write_flag(t_flag *flag, char *arg)
 {
 	if (ft_strchr(arg, 'l') != NULL)

@@ -20,46 +20,53 @@ char	*putb(char *direct, char *d_name)
 	return (direct);
 }
 
-t_lsave		*no_sort_flag(char *direct, t_pre *pre, t_flag *flag)
+int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
 {
 	t_lsave *head;
 	t_lsave	*current;
 
-	head = new_lsave(direct);
+	head = new_lsave(direct, flag);
 	if (head == NULL)
-		return (NULL);
+		return (0);
+
 	sort_name(head);
+	if (flag->fl_r == 1)
+		sort_recur(head);
+	if (flag->fl_r == 1 && flag->fl_t == 1)
+		sort_time_recurs(head);
+	else if (flag->fl_t == 1)
+		sort_time(head);
+
 	current = head;
+	if (flag->no_dir != 1)
+		ft_printf("%s:\n", direct);
+	flag->no_dir = 0;
+	if (flag->fl_l == 1 && pre.size != 0)
+		ft_printf("total %d\n", pre.block);
 	while (current != NULL)
 	{
-		if (flag->fl_l == 1)
+		if (flag->fl_l == 1 && (flag->fl_a == 1 || current->name[0] != '.'))
 		{
 			if (current->type == 10)
-				print_l_link(current->name, current->name, pre);
+				print_l_link(putb(direct, current->name), current->name, pre);
 			else
-				print_l(current->name, current->name, pre);
+				print_l(putb(direct, current->name), current->name, pre);
 		}
 		else if (flag->fl_a == 1 || current->name[0] != '.')
 			ft_printf("%s\n", current->name);
 		current = current->next;
 	}
-	return (head);
+	return (1);
 }
 
-t_lsave	 *printer(char *direct, t_flag *flag)
+int	 printer(char *direct, t_flag *flag)
 {
 	t_pre pre;
-	t_lsave *list;
+	int check;
 
 	pre = pre_write(direct, flag);
-	list = no_sort_flag(direct, &pre, flag);
-	if (list == NULL)
-		return (NULL);
-	/*while (list != NULL)
-	{
-		ft_printf("name = %s\n", list->name);
-		ft_printf("type = %d\n", list->type);
-		list = list->next;
-	}*/
-	return (list);
+	check = no_sort_flag(direct, pre, flag);
+	/*if (list == NULL)
+		return (NULL);*/
+	return (check);
 }

@@ -86,7 +86,7 @@ int		numb_len(int numb)
 	return (i);
 }
 
-void	print_l(char *putb_file, char *name_file, t_pre *pre)
+void	print_l(char *putb_file, char *name_file, t_pre pre)
 {
 	struct stat line;
 	struct passwd *pwd;
@@ -98,8 +98,8 @@ void	print_l(char *putb_file, char *name_file, t_pre *pre)
 	//ft_printf("line.st_mode = %d\n", line.st_mode);
 	//ft_printf("name_file = %s\n", name_file);
 	print_st_mode(putb_file, line.st_mode);
-	ft_printf("%*d %s  %s %*d %s ", (numb_len(pre->nlink) + 1), line.st_nlink, pwd->pw_name,\
-		grp->gr_name, (numb_len(pre->size) + 1), line.st_size, str_t(ctime(&line.st_mtime)));
+	ft_printf("%*d %s  %s %*d %s ", (numb_len(pre.nlink) + 1), line.st_nlink, pwd->pw_name,\
+		grp->gr_name, (numb_len(pre.size) + 1), line.st_size, str_t(ctime(&line.st_mtime)));
 	ft_printf("%s\n", name_file);
 }
 

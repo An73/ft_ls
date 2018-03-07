@@ -12,6 +12,16 @@
 
 #include "ft_ls.h"
 
+void	ft_swap_t(time_t *a, time_t *b)
+{
+	time_t	tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+
 void	swap_name(t_lsave *a, t_lsave *b)
 {
 	char	*tmp = NULL;
@@ -19,6 +29,7 @@ void	swap_name(t_lsave *a, t_lsave *b)
 	a->name = b->name;
 	b->name = tmp;
 	ft_swap(&a->type, &b->type);
+	ft_swap_t(&a->time, &b->time);
 }
 
 void	sort_name(t_lsave *head)
@@ -36,6 +47,81 @@ void	sort_name(t_lsave *head)
 		while (ptr->next != lptr)
 		{
 			if (ft_strcmp(ptr->name, ptr->next->name) > 0)
+			{
+				swap_name(ptr, ptr->next);
+				s = 1;
+			}
+			ptr = ptr->next;
+		}
+		lptr = ptr;
+	}
+}
+
+void	sort_recur(t_lsave *head)
+{
+	t_lsave  *ptr;
+	t_lsave	 *lptr;
+	int			s;
+
+	lptr = NULL;
+	s = 1;
+	while (s)
+	{
+		s = 0;
+		ptr = head;
+		while (ptr->next != lptr)
+		{
+			if (ft_strcmp(ptr->name, ptr->next->name) < 0)
+			{
+				swap_name(ptr, ptr->next);
+				s = 1;
+			}
+			ptr = ptr->next;
+		}
+		lptr = ptr;
+	}
+}
+
+void	sort_time(t_lsave *head)
+{
+	t_lsave  *ptr;
+	t_lsave	 *lptr;
+	int			s;
+
+	lptr = NULL;
+	s = 1;
+	while (s)
+	{
+		s = 0;
+		ptr = head;
+		while (ptr->next != lptr)
+		{
+			if (ptr->time < ptr->next->time)
+			{
+				swap_name(ptr, ptr->next);
+				s = 1;
+			}
+			ptr = ptr->next;
+		}
+		lptr = ptr;
+	}
+}
+
+void	sort_time_recurs(t_lsave *head)
+{
+	t_lsave  *ptr;
+	t_lsave	 *lptr;
+	int			s;
+
+	lptr = NULL;
+	s = 1;
+	while (s)
+	{
+		s = 0;
+		ptr = head;
+		while (ptr->next != lptr)
+		{
+			if (ptr->time > ptr->next->time)
 			{
 				swap_name(ptr, ptr->next);
 				s = 1;

@@ -22,6 +22,7 @@ void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 	dir = opendir(direct);
 	if (dir == NULL)
 	{
+		return ;
 		ft_printf("Error_dir.\n");
 		exit(1);
 	}
@@ -48,6 +49,7 @@ t_pre	pre_write(char *direct, t_flag *flag)
 
 	pre.nlink = 0;
 	pre.size = 0;
+	pre.block = 0;
 
 	pre_w(&pre, direct, flag);
 	return (pre);
