@@ -12,6 +12,18 @@
 
 #include "ft_ls.h"
 
+/*void	pre_link(t_pre *pre, char *direct, struct dirent *sd;)
+{
+	lstat(putb(direct, sd->d_name), &line);
+	if (l_xattr(direct) == 1)
+		pre->xtr = 1;
+	if (line.st_nlink > pre->nlink)
+		pre->nlink = line.st_nlink;
+	if (line.st_size > pre->size)
+		pre->size = line.st_size;
+	pre->block += line.st_blocks;
+}*/
+
 void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 {
 	DIR *dir;
@@ -30,7 +42,10 @@ void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 	{
 		if (flag->fl_a == 1 || sd->d_name[0] != '.')
 		{
-			stat(putb(direct, sd->d_name), &line);
+			if (sd->d_type == 10)
+				lstat(putb(direct, sd->d_name), &line);
+			else
+				stat(putb(direct, sd->d_name), &line);
 			if (l_xattr(direct) == 1)
 				pre->xtr = 1;
 			if (line.st_nlink > pre->nlink)
@@ -48,7 +63,7 @@ t_pre	pre_write(char *direct, t_flag *flag)
 	t_pre pre;
 
 	pre.nlink = 0;
-	pre.size = 0;
+	pre.size = -1;
 	pre.block = 0;
 
 	pre_w(&pre, direct, flag);

@@ -78,6 +78,8 @@ int		numb_len(int numb)
 	int		i;
 
 	i = 0;
+	if (numb == 0)
+		i++;
 	while (numb)
 	{
 		numb = numb / 10;

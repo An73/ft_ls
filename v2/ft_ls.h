@@ -68,5 +68,5 @@ int		check_flag(char *arg);
 void	arg_file(char *direct, t_flag *flag);
 void	print_st_mode(char *putb_file, int numb);
 void	pushback(t_lsave **head, t_lsave *new);
-t_lsave 	*new_list(struct dirent *sd);
+t_lsave 	*new_list(struct dirent *sd, char *direct);
 t_lsave *file_arg(t_flag *flag, int argc, char **argv);

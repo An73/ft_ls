@@ -26,31 +26,31 @@
 	new->next = NULL;
 	return (new);
 }*/
-t_lsave 	*new_list_l(struct dirent *sd)
+t_lsave 	*new_list_l(struct dirent *sd, char *direct)
 {
 	struct stat line;
 	t_lsave *new;
 
 	new = (t_lsave*)malloc(sizeof(t_lsave));
-	lstat(sd->d_name, &line);
+	lstat(putb(direct, sd->d_name), &line);
 	new->type = sd->d_type;
 	new->name = ft_strdup(sd->d_name);
-	new->time = line.st_mtimespec.tv_sec;
+	new->time = line.st_mtime;
 	new->marker = 0;
 	new->next = NULL;
 	return (new);
 }
 
-t_lsave 	*new_list(struct dirent *sd)
+t_lsave 	*new_list(struct dirent *sd, char *direct)
 {
 	struct stat line;
 	t_lsave *new;
 
 	new = (t_lsave*)malloc(sizeof(t_lsave));
-	stat(sd->d_name, &line);
+	stat(putb(direct, sd->d_name), &line);
 	new->type = sd->d_type;
 	new->name = ft_strdup(sd->d_name);
-	new->time = line.st_mtimespec.tv_sec;
+	new->time = line.st_mtime;
 	new->marker = 0;
 	new->next = NULL;
 	return (new);
@@ -86,9 +86,9 @@ t_lsave		*new_lsave(char *direct, t_flag *flag)
 	while ( (sd=readdir(dir)) != NULL)
 	{
 		if (sd->d_type == 10)
-			pushback(&head, new_list_l(sd));
+			pushback(&head, new_list_l(sd, direct));
 		else
-			pushback(&head, new_list(sd));
+			pushback(&head, new_list(sd, direct));
 	}
 	closedir(dir);
 	return (head);

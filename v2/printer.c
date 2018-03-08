@@ -41,7 +41,7 @@ int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
 	if (flag->no_dir != 1)
 		ft_printf("%s:\n", direct);
 	flag->no_dir = 0;
-	if (flag->fl_l == 1 && pre.size != 0)
+	if (flag->fl_l == 1 && pre.size != -1)
 		ft_printf("total %d\n", pre.block);
 	while (current != NULL)
 	{
