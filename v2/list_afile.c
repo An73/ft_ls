@@ -24,7 +24,8 @@ t_pre		pre_afile(int argc, char **argv, t_flag *flag)
 	pre.block = 0;
 	while (argc > i)
 	{
-		if (stat(argv[i], &line) != -1 && (flag->fl_a == 1 || argv[1][0] != '.'))
+		if (readlink(argv[i], NULL, 0) != -1 &&\
+			(lstat(argv[i], &line) != -1 && (flag->fl_a == 1 || argv[1][0] != '.')))
 		{
 			if (!(S_ISDIR(line.st_mode)))
 			{
@@ -34,6 +35,26 @@ t_pre		pre_afile(int argc, char **argv, t_flag *flag)
 					pre.size = line.st_size;
 			}
 		}
+		else if ((stat(argv[i], &line) != -1 && (flag->fl_a == 1 || argv[1][0] != '.')))
+		{
+			if (!(S_ISDIR(line.st_mode)))
+			{
+				if (line.st_nlink > pre.nlink)
+					pre.nlink = line.st_nlink;
+				if (line.st_size > pre.size)
+					pre.size = line.st_size;
+			}
+		}
+		/*if (stat(argv[i], &line) != -1 && (flag->fl_a == 1 || argv[1][0] != '.'))
+		{
+			if (!(S_ISDIR(line.st_mode)))
+			{
+				if (line.st_nlink > pre.nlink)
+					pre.nlink = line.st_nlink;
+				if (line.st_size > pre.size)
+					pre.size = line.st_size;
+			}
+		}*/
 		i++;
 	}
 	return (pre);
@@ -52,24 +73,31 @@ t_lsave 	*new_argf(struct stat line, char *argv)
 	return (new);
 }
 
-void	print_arg_file(t_lsave *head, t_flag *flag, t_pre pre)
+void	print_arg_file(t_lsave *head, t_flag *flag, t_pre pre, int numb)
 {
 	t_lsave	*current;
+	int		i;
 
+	i = 0;
 	current = head;
 	while (current != NULL)
 	{
 		if (flag->fl_l == 1 && (flag->fl_a == 1 || current->name[0] != '.'))
 		{
-			if (current->type == 10)
+			if (readlink(current->name, NULL, 0) != -1)
 				print_l_link(current->name, current->name, pre);
 			else
 				print_l(current->name, current->name, pre);
 		}
 		else if (flag->fl_a == 1 || current->name[0] != '.')
-			ft_printf("%s\n", current->name);
+			ft_printf("%s", current->name);
+		i++;
+		if ((i < numb || head->next == NULL) && flag->fl_l != 1 && (flag->fl_a == 1 || current->name[0] != '.'))
+			ft_printf("\n");
 		current = current->next;
 	}
+	if (flag->fl_l == 1 && flag->check_min == 2)
+		ft_printf("\n");
 }
 
 void	sorting(t_lsave **head, t_flag *flag)
@@ -83,29 +111,44 @@ void	sorting(t_lsave **head, t_flag *flag)
 		sort_time(*head);
 }
 
-t_lsave *file_arg(t_flag *flag, int argc, char **argv)
+t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i)
 {
 	t_lsave *head;
 	struct stat line;
-	int 	i;
+	int 	numb_dir;
 	t_pre 	pre;
 
 	pre = pre_afile(argc, argv, flag);
 	head = NULL;
-	i = 1;
+	numb_dir = i;
 	while (argc > i)
 	{
-		if(stat(argv[i], &line) != -1)
+		if (readlink(argv[i], NULL, 0) != -1 && opendir(argv[i]) == NULL)
 		{
-			if (!(S_ISDIR(line.st_mode)))
-				pushback(&head, new_argf(line, argv[i]));
+			if(lstat(argv[i], &line) != -1)
+			{
+				if (!(S_ISDIR(line.st_mode)))
+					pushback(&head, new_argf(line, argv[i]));
+				else
+					flag->check_min = 2;
+			}
+		}
+		else
+		{
+			if(stat(argv[i], &line) != -1)
+			{
+				if (!(S_ISDIR(line.st_mode)))
+					pushback(&head, new_argf(line, argv[i]));
+				else
+					flag->check_min = 2;
+			}
 		}
 		i++;
 	}
 	if (head != NULL)
 	{
 		sorting(&head, flag);
-		print_arg_file(head, flag, pre);
+		print_arg_file(head, flag, pre, argc - numb_dir);
 	}
 	return (head);
 }

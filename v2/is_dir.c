@@ -40,8 +40,8 @@ void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 	check = 0;
 	if (argc == i + 1)
 		flag->no_dir = 1;
-	head = file_arg(flag, argc, argv);
-	if (head != NULL)
+	head = file_arg(flag, argc, argv, i);
+	if (head != NULL && head->next != NULL)
 		ft_printf("\n");
 	while (argc > i)
 	{

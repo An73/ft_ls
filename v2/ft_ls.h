@@ -28,6 +28,7 @@ typedef struct s_flag{
 	char	fl_r;
 	char	fl_t;
 	char	no_dir;
+	int		check_min;
 }				t_flag;
 
 typedef struct s_pre{
@@ -64,9 +65,9 @@ void	swap_name(t_lsave *a, t_lsave *b);
 void	no_dir(t_flag *flag);
 int		big_r(char *direct, t_flag *flag);
 void	yes_dir(t_flag *flag, int argc, char **argv, int i);
-int		check_flag(char *arg);
+int		check_flag(char *arg, t_flag *flag);
 void	arg_file(char *direct, t_flag *flag);
 void	print_st_mode(char *putb_file, int numb);
 void	pushback(t_lsave **head, t_lsave *new);
 t_lsave 	*new_list(struct dirent *sd, char *direct);
-t_lsave *file_arg(t_flag *flag, int argc, char **argv);
+t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i);

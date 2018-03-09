@@ -109,8 +109,9 @@ int		main(int argc, char **argv)
 	t_flag	flag;
 	int		i;
 
+	flag.check_min = 0;
 	i = 1;
-	while (argc > 1 && i < argc && argv[i][0] == '-' && check_flag(argv[i]) != 0)
+	while (argc > 1 && i < argc && argv[i][0] == '-' && check_flag(argv[i], &flag) != 0)
 	{
 		write_flag(&flag, argv[i]);
 		i++;

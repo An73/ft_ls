@@ -12,17 +12,23 @@
 
 #include "ft_ls.h"
 
-int		check_flag(char *arg)
+int		check_flag(char *arg, t_flag *flag)
 {
 	int	i;
 	int	check;
 
 	i = 1;
 	check = 1;
-
+	if (arg[i] == '\0')
+		check = 0;
 	while (arg[i] != '\0' && check != 0)
 	{
-		if (arg[i] == 'l' || arg[i] == 'R' || arg[i] == 'a' ||\
+		if (flag->check_min != 1 && (arg[i] == '-' && arg[i+1] == '\0'))
+		{
+			flag->check_min = 1;
+			check = 1;
+		}
+		else if (arg[i] == 'l' || arg[i] == 'R' || arg[i] == 'a' ||\
 			arg[i] == 'r' || arg[i] == 't' || arg[i] == '1')
 			check = 1;
 		else

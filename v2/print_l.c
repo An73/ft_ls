@@ -48,6 +48,35 @@ char	*str_t(char *time)
 	return (str_tm);
 }
 
+char	*str_btf(char *time)
+{
+	char 	*str_tm;
+	int		i;
+
+	i = 0;
+	time += 4;
+	str_tm = (char*)malloc(sizeof(char) * 13);
+	while (i < 7)
+	{
+		str_tm[i] = *time;
+		time++;
+		i++;
+	}
+	str_tm[i++] = ' ';
+	time += 8;
+	while (*time != '\n')
+	{
+		if (*time != ' ')
+		{
+			str_tm[i] = *time;
+			i++;
+		}
+		time++;
+	}
+	str_tm[i] = '\0';
+	return (str_tm);
+}
+
 void	print_st_mode(char *putb_file, int numb)
 {
 	//ft_printf("numb = %d\n", numb);
@@ -100,8 +129,13 @@ void	print_l(char *putb_file, char *name_file, t_pre pre)
 	//ft_printf("line.st_mode = %d\n", line.st_mode);
 	//ft_printf("name_file = %s\n", name_file);
 	print_st_mode(putb_file, line.st_mode);
-	ft_printf("%*d %s  %s %*d %s ", (numb_len(pre.nlink) + 1), line.st_nlink, pwd->pw_name,\
-		grp->gr_name, (numb_len(pre.size) + 1), line.st_size, str_t(ctime(&line.st_mtime)));
+	ft_printf("%*d %s  %s %*d ", (numb_len(pre.nlink) + 1), line.st_nlink, pwd->pw_name,\
+		grp->gr_name, (numb_len(pre.size) + 1), line.st_size);
+	//ft_printf("tt = %s\n", ctime(&line.st_mtime));
+	if ((time(NULL) < line.st_mtime) || ((time(NULL) - line.st_mtime) > 15780000))
+		ft_printf("%s ", str_btf(ctime(&line.st_mtime)));
+	else
+		ft_printf("%s ", str_t(ctime(&line.st_mtime)));
 	ft_printf("%s\n", name_file);
 }
 
