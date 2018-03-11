@@ -95,6 +95,24 @@ t_lsave		*new_lsave(char *direct, t_flag *flag)
 
 }
 
+void	error_check(char **argv, int argc, int i)
+{
+	int		n;
+
+	errno = 0;
+	n = i;
+	while (n < argc)
+	{
+		errno = 0;
+		opendir(argv[n]);
+		if (errno == 2 && readlink(argv[n], NULL, 0) == -1)
+		{
+			ft_printf("ls: %s: ", argv[n]);
+			perror("");
+		}
+		n++;
+	}
+}
 /*void	test(t_lsave *head)
 {
 	while (head->next != NULL)
@@ -116,6 +134,7 @@ int		main(int argc, char **argv)
 		write_flag(&flag, argv[i]);
 		i++;
 	}
+	error_check(argv, argc, i);
 	if (argc == i)
 		no_dir(&flag);
 	else

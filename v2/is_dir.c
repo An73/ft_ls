@@ -16,11 +16,25 @@ int		check_afile(t_lsave *head, char *arg)
 {
 	while (head != NULL)
 	{
+		//ft_printf("head->nema: %s\n", head->name);
 		if (ft_strcmp(head->name, arg) == 0)
 			return (0);
 		head = head->next;
 	}
 	return (1);
+}
+
+int		cout_list(t_lsave *head)
+{
+	int		i;
+
+	i = 0;
+	while (head != NULL)
+	{
+		head = head->next;
+		i++;
+	}
+	return(i);
 }
 
 void	no_dir(t_flag *flag)
@@ -36,25 +50,34 @@ void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 {
 	int check;
 	t_lsave *head;
+	int num_d;
 
 	check = 0;
 	if (argc == i + 1)
 		flag->no_dir = 1;
 	head = file_arg(flag, argc, argv, i);
+	//printf("cout %d\n", cout_list(head));
+	//printf("ooo %d\n", argc - (cout_list(head) + i));
+	num_d = argc - (cout_list(head) + i);
 	if (head != NULL && head->next != NULL)
 		ft_printf("\n");
 	while (argc > i)
 	{
 		if (check_afile(head, argv[i]) == 0)
 			i++;
-		else
+		else if (argc > i)
 		{
+			//ft_printf("i = %d\n", i);
 			if (flag->fl_R == 1)
 				check = big_r(argv[i], flag);
 			else
 				check = printer(argv[i], flag);
 			i++;
-			if (i != argc && check != 0 && check_afile(head, argv[i]) != 0)
+			num_d--;
+			//write(1,  "+", 1);
+			//printf("check = %d\n", check_afile(head, argv[i]));
+			//write(1,  "-", 1);
+			if (i < argc && check != 0 && num_d > 0/*check_afile(head, argv[i - 1]) != 0*/)
 				ft_printf("\n");
 		}
 	}

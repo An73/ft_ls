@@ -32,8 +32,18 @@ void	arg_file(char *direct, t_flag *flag)
 				grp->gr_name, (numb_len(line.st_size) + 1), line.st_size, str_t(ctime(&line.st_mtime)));
 		}
 		if (S_IFDIR & line.st_mode)
-			ft_printf("%s:\n", direct);
+		{
+			ft_printf("ls: %s: ", direct);
+			ft_putstr_fd(strerror(13), 2);
+			ft_putstr_fd("\n", 2);
+		}
 		else
 			ft_printf("%s\n", direct);
 	}
+	/*else
+	{
+		//ft_printf("ls: %s: %s\n", direct, strerror(errno));
+		ft_printf("ls: %s: ", direct);
+		perror("");
+	}*/
 }

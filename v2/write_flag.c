@@ -28,11 +28,28 @@ int		check_flag(char *arg, t_flag *flag)
 			flag->check_min = 1;
 			check = 1;
 		}
-		else if (arg[i] == 'l' || arg[i] == 'R' || arg[i] == 'a' ||\
-			arg[i] == 'r' || arg[i] == 't' || arg[i] == '1')
+		else if ((arg[i] == 'l' || arg[i] == 'R' || arg[i] == 'a' ||\
+			arg[i] == 'r' || arg[i] == 't' || arg[i] == '1' || arg[i] == 'A'\
+			|| arg[i] == 'B' || arg[i] == 'C' || arg[i] == 'F'\
+			|| arg[i] == 'G' || arg[i] == 'H' || arg[i] == 'L'\
+			|| arg[i] == 'O' || arg[i] == 'P' || arg[i] == 'W'\
+			|| arg[i] == 'S' || arg[i] == 'T' || arg[i] == 'U'\
+			|| arg[i] == 'b' || arg[i] == 'c' || arg[i] == 'd'\
+			|| arg[i] == 'e' || arg[i] == 'f' || arg[i] == 'g'\
+			|| arg[i] == 'h' || arg[i] == 'i' || arg[i] == 'k'\
+			|| arg[i] == 'm' || arg[i] == 'n' || arg[i] == 'o'\
+			|| arg[i] == 'p' || arg[i] == 'q' || arg[i] == 's'\
+			|| arg[i] == 'u' || arg[i] == 'w' || arg[i] == 'x') && flag->check_min != 1)
 			check = 1;
 		else
 			check = 0;
+		if (check == 0 && flag->check_min != 1)
+		{
+			ft_putstr_fd("ls: illegal option -- ", 2);
+			write(2, &arg[i], 1);
+			ft_putstr_fd("\nusage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]\n", 2);
+			exit(1);
+		}
 		i++;
 	}
 	return (check);

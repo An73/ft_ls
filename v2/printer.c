@@ -27,7 +27,11 @@ int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
 
 	head = new_lsave(direct, flag);
 	if (head == NULL)
+	{
+		/*if (flag->fl_R != 1)
+			ft_printf("ls: %s: No such file or directory\n", direct);*/
 		return (0);
+	}
 
 	sort_name(head);
 	if (flag->fl_r == 1)

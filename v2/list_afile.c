@@ -133,7 +133,7 @@ t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i)
 					flag->check_min = 2;
 			}
 		}
-		else
+		else if (opendir(argv[i]) == NULL)
 		{
 			if(stat(argv[i], &line) != -1)
 			{

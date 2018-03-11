@@ -19,6 +19,8 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <errno.h>
+#include <stdio.h>
 #include "./libft/includes/libft.h"
 
 typedef struct s_flag{
