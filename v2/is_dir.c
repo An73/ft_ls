@@ -41,16 +41,16 @@ void	no_dir(t_flag *flag)
 {
 	flag->no_dir = 1;
 	if (flag->fl_R == 1)
-		big_r(".", flag);
+		big_r(ft_strdup("."), flag);
 	else
-		printer(".", flag);
+		printer(ft_strdup("."), flag);
 }
 
 void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 {
 	int check;
 	t_lsave *head;
-	int num_d;
+	t_lsave *head_dir;
 
 	check = 0;
 	if (argc == i + 1)
@@ -58,28 +58,26 @@ void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 	head = file_arg(flag, argc, argv, i);
 	//printf("cout %d\n", cout_list(head));
 	//printf("ooo %d\n", argc - (cout_list(head) + i));
-	num_d = argc - (cout_list(head) + i);
+
+
 	if (head != NULL && head->next != NULL)
 		ft_printf("\n");
-	while (argc > i)
+	head_dir = argv_dir(argc, argv, i, head);
+	if (head_dir != NULL)
 	{
-		if (check_afile(head, argv[i]) == 0)
-			i++;
-		else if (argc > i)
-		{
-			//ft_printf("i = %d\n", i);
-			if (flag->fl_R == 1)
-				check = big_r(argv[i], flag);
-			else
-				check = printer(argv[i], flag);
-			i++;
-			num_d--;
-			//write(1,  "+", 1);
-			//printf("check = %d\n", check_afile(head, argv[i]));
-			//write(1,  "-", 1);
-			if (i < argc && check != 0 && num_d > 0/*check_afile(head, argv[i - 1]) != 0*/)
-				ft_printf("\n");
-		}
+		sorting(&head_dir, flag);
+	}
+	while(head_dir != NULL)
+	{
+		if (flag->fl_R == 1)
+			big_r(head_dir->name, flag);
+		else
+			printer(head_dir->name, flag);
+		head_dir = head_dir->next;
+		if (head_dir != NULL)
+			ft_printf("\n");
+			//if (i < argc && check != 0 && num_d > 0/*check_afile(head, argv[i - 1]) != 0*/)
+				//ft_printf("\n");
 	}
 }
 

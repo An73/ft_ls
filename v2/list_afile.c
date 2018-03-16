@@ -148,7 +148,7 @@ t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i)
 	if (head != NULL)
 	{
 		sorting(&head, flag);
-		print_arg_file(head, flag, pre, argc - numb_dir);
+		print_arg_file(head, flag, pre, (argc - numb_dir - flag->num_err));
 	}
 	return (head);
 }

@@ -29,6 +29,7 @@ void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 	DIR *dir;
 	struct dirent *sd;
 	struct stat line;
+	char	*fr;
 
 	stat(direct, &line);
 	dir = opendir(direct);
@@ -43,9 +44,17 @@ void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 		if (flag->fl_a == 1 || sd->d_name[0] != '.')
 		{
 			if (sd->d_type == 10)
+			{
+				fr = putb(direct, sd->d_name);
 				lstat(putb(direct, sd->d_name), &line);
+				free(fr);
+			}
 			else
-				stat(putb(direct, sd->d_name), &line);
+			{
+				fr = putb(direct, sd->d_name);
+				stat(fr, &line);
+				free(fr);
+			}
 			if (l_xattr(direct) == 1)
 				pre->xtr = 1;
 			if (line.st_nlink > pre->nlink)

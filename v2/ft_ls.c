@@ -45,9 +45,12 @@ t_lsave 	*new_list(struct dirent *sd, char *direct)
 {
 	struct stat line;
 	t_lsave *new;
+	char	*fr;
 
 	new = (t_lsave*)malloc(sizeof(t_lsave));
-	stat(putb(direct, sd->d_name), &line);
+	fr = putb(direct, sd->d_name);
+	stat(fr, &line);
+	free(fr);
 	new->type = sd->d_type;
 	new->name = ft_strdup(sd->d_name);
 	new->time = line.st_mtime;
@@ -92,26 +95,55 @@ t_lsave		*new_lsave(char *direct, t_flag *flag)
 	}
 	closedir(dir);
 	return (head);
-
 }
 
-void	error_check(char **argv, int argc, int i)
+t_lsave 	*new_err(char *name)
+{
+	t_lsave *new;
+
+	new = (t_lsave*)malloc(sizeof(t_lsave));
+	new->name = ft_strdup(name);
+	new->next = NULL;
+	return (new);
+}
+
+int	error_check(char **argv, int argc, int i)
 {
 	int		n;
+	t_lsave *head_err;
 
-	errno = 0;
-	n = i;
-	while (n < argc)
+	n = 0;
+	head_err = NULL;
+	while (i < argc)
+	{
+		if (argv[i][0] == '\0')
+		{
+			ft_putstr_fd("ls: fts_open: No such file or directory\n", 2);
+			exit(1);
+		}
+		errno = 0;
+		opendir(argv[i]);
+		if (errno == 2 && readlink(argv[i], NULL, 0) == -1)
+		{
+			pushback(&head_err, new_err(argv[i]));
+			n++;
+		}
+		i++;
+	}
+	if (head_err != NULL)
+		sort_name(head_err);
+	while (head_err != NULL)
 	{
 		errno = 0;
-		opendir(argv[n]);
-		if (errno == 2 && readlink(argv[n], NULL, 0) == -1)
+		opendir(head_err->name);
+		if (errno == 2 && readlink(head_err->name, NULL, 0) == -1)
 		{
-			ft_printf("ls: %s: ", argv[n]);
+			ft_printf("ls: %s: ", head_err->name);
 			perror("");
 		}
-		n++;
+		head_err = head_err->next;
 	}
+	return (n);
 }
 /*void	test(t_lsave *head)
 {
@@ -134,10 +166,13 @@ int		main(int argc, char **argv)
 		write_flag(&flag, argv[i]);
 		i++;
 	}
-	error_check(argv, argc, i);
+	//ft_printf("%d\n", i);
+	flag.num_err = error_check(argv, argc, i);
+	//ft_printf("%d\n", i);
 	if (argc == i)
 		no_dir(&flag);
 	else
 		yes_dir(&flag, argc, argv, i);
+	//system("leaks ft_ls");
 	//printer(".", &flag);
 }

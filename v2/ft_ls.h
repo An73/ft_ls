@@ -31,6 +31,7 @@ typedef struct s_flag{
 	char	fl_t;
 	char	no_dir;
 	int		check_min;
+	int		num_err;
 }				t_flag;
 
 typedef struct s_pre{
@@ -73,3 +74,8 @@ void	print_st_mode(char *putb_file, int numb);
 void	pushback(t_lsave **head, t_lsave *new);
 t_lsave 	*new_list(struct dirent *sd, char *direct);
 t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i);
+void	sorting(t_lsave **head, t_flag *flag);
+t_lsave	*argv_dir(int argc, char **argv, int i, t_lsave *head);
+t_lsave 	*new_argf(struct stat line, char *argv);
+int		check_afile(t_lsave *head, char *arg);
+void	free_lst(t_lsave **head);

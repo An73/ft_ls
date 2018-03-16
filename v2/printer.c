@@ -14,10 +14,16 @@
 
 char	*putb(char *direct, char *d_name)
 {
-	direct = ft_strjoin(direct, "/");
-	direct = ft_strjoin(direct, d_name);
+	char	*fr;
+	char	*new_direct;
+
+	new_direct = ft_strjoin(direct, "/");
+
+	fr = new_direct;
+	new_direct = ft_strjoin(new_direct, d_name);
+	free(fr);
 	//ft_printf("%s\n", direct);
-	return (direct);
+	return (new_direct);
 }
 
 int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
@@ -60,6 +66,7 @@ int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
 			ft_printf("%s\n", current->name);
 		current = current->next;
 	}
+	free_lst(&head);
 	return (1);
 }
 
@@ -72,5 +79,6 @@ int	 printer(char *direct, t_flag *flag)
 	check = no_sort_flag(direct, pre, flag);
 	/*if (list == NULL)
 		return (NULL);*/
+	//free(direct);
 	return (check);
 }

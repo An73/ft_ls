@@ -39,6 +39,7 @@ void	recursion(char *direct, t_flag *flag)
 		}
 		current = current->next;
 	}
+	free_lst(&head);
 }
 
 int		big_r(char *direct, t_flag *flag)
