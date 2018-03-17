@@ -30,6 +30,7 @@ int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
 {
 	t_lsave *head;
 	t_lsave	*current;
+	char	*fr;
 
 	head = new_lsave(direct, flag);
 	if (head == NULL)
@@ -58,9 +59,17 @@ int		no_sort_flag(char *direct, t_pre pre, t_flag *flag)
 		if (flag->fl_l == 1 && (flag->fl_a == 1 || current->name[0] != '.'))
 		{
 			if (current->type == 10)
-				print_l_link(putb(direct, current->name), current->name, pre);
+			{
+				fr = putb(direct, current->name);
+				print_l_link(fr, current->name, pre);
+				free(fr);
+			}
 			else
+			{
+				fr = putb(direct, current->name);
 				print_l(putb(direct, current->name), current->name, pre);
+				free(fr);
+			}
 		}
 		else if (flag->fl_a == 1 || current->name[0] != '.')
 			ft_printf("%s\n", current->name);
@@ -77,6 +86,7 @@ int	 printer(char *direct, t_flag *flag)
 
 	pre = pre_write(direct, flag);
 	check = no_sort_flag(direct, pre, flag);
+	//system("leaks ft_ls");
 	/*if (list == NULL)
 		return (NULL);*/
 	//free(direct);

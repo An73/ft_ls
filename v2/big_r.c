@@ -16,6 +16,7 @@ void	recursion(char *direct, t_flag *flag)
 {
 	t_lsave	*current;
 	t_lsave *head;
+	char	*fr;
 
 	head = new_lsave(direct, flag);
 	current = head;
@@ -35,7 +36,9 @@ void	recursion(char *direct, t_flag *flag)
 		else if (current->type == 4 && (flag->fl_a == 1 || current->name[0] != '.'))
 		{
 			write(1, "\n", 1);
-			big_r(putb(direct, current->name), flag);
+			fr = putb(direct, current->name);
+			big_r(fr, flag);
+			free(fr);
 		}
 		current = current->next;
 	}
@@ -49,5 +52,6 @@ int		big_r(char *direct, t_flag *flag)
 	if (check == 0)
 		return (check);
 	recursion(direct, flag);
+	//free(direct);
 	return (check);
 }

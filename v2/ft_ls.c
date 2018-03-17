@@ -30,9 +30,12 @@ t_lsave 	*new_list_l(struct dirent *sd, char *direct)
 {
 	struct stat line;
 	t_lsave *new;
+	char	*fr;
 
 	new = (t_lsave*)malloc(sizeof(t_lsave));
-	lstat(putb(direct, sd->d_name), &line);
+	fr = putb(direct, sd->d_name);
+	lstat(fr, &line);
+	free(fr);
 	new->type = sd->d_type;
 	new->name = ft_strdup(sd->d_name);
 	new->time = line.st_mtime;
@@ -111,6 +114,8 @@ int	error_check(char **argv, int argc, int i)
 {
 	int		n;
 	t_lsave *head_err;
+	DIR *dir;
+
 
 	n = 0;
 	head_err = NULL;
@@ -122,12 +127,14 @@ int	error_check(char **argv, int argc, int i)
 			exit(1);
 		}
 		errno = 0;
-		opendir(argv[i]);
+		dir = opendir(argv[i]);
 		if (errno == 2 && readlink(argv[i], NULL, 0) == -1)
 		{
 			pushback(&head_err, new_err(argv[i]));
 			n++;
 		}
+		if (dir != NULL)
+			closedir(dir);
 		i++;
 	}
 	if (head_err != NULL)
@@ -135,13 +142,15 @@ int	error_check(char **argv, int argc, int i)
 	while (head_err != NULL)
 	{
 		errno = 0;
-		opendir(head_err->name);
+		dir = opendir(head_err->name);
 		if (errno == 2 && readlink(head_err->name, NULL, 0) == -1)
 		{
 			ft_printf("ls: %s: ", head_err->name);
 			perror("");
 		}
 		head_err = head_err->next;
+		if (dir != NULL)
+			closedir(dir);
 	}
 	return (n);
 }

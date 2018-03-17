@@ -117,13 +117,15 @@ t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i)
 	struct stat line;
 	int 	numb_dir;
 	t_pre 	pre;
+	DIR *dir;
 
 	pre = pre_afile(argc, argv, flag);
 	head = NULL;
 	numb_dir = i;
 	while (argc > i)
 	{
-		if (readlink(argv[i], NULL, 0) != -1 && opendir(argv[i]) == NULL)
+		dir = opendir(argv[i]);
+		if (readlink(argv[i], NULL, 0) != -1 && dir == NULL)
 		{
 			if(lstat(argv[i], &line) != -1)
 			{
@@ -133,7 +135,7 @@ t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i)
 					flag->check_min = 2;
 			}
 		}
-		else if (opendir(argv[i]) == NULL)
+		else if (dir == NULL)
 		{
 			if(stat(argv[i], &line) != -1)
 			{
@@ -143,6 +145,8 @@ t_lsave *file_arg(t_flag *flag, int argc, char **argv, int i)
 					flag->check_min = 2;
 			}
 		}
+		if (dir != NULL)
+			closedir(dir);
 		i++;
 	}
 	if (head != NULL)

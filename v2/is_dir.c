@@ -39,11 +39,15 @@ int		cout_list(t_lsave *head)
 
 void	no_dir(t_flag *flag)
 {
+	char	*direct;
+
+	direct = ft_strdup(".");
 	flag->no_dir = 1;
 	if (flag->fl_R == 1)
-		big_r(ft_strdup("."), flag);
+		big_r(direct, flag);
 	else
-		printer(ft_strdup("."), flag);
+		printer(direct, flag);
+	free(direct);
 }
 
 void	yes_dir(t_flag *flag, int argc, char **argv, int i)
@@ -51,6 +55,7 @@ void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 	int check;
 	t_lsave *head;
 	t_lsave *head_dir;
+	t_lsave *fr;
 
 	check = 0;
 	if (argc == i + 1)
@@ -59,14 +64,15 @@ void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 	//printf("cout %d\n", cout_list(head));
 	//printf("ooo %d\n", argc - (cout_list(head) + i));
 
-
 	if (head != NULL && head->next != NULL)
 		ft_printf("\n");
 	head_dir = argv_dir(argc, argv, i, head);
+	free_lst(&head);
 	if (head_dir != NULL)
 	{
 		sorting(&head_dir, flag);
 	}
+	fr = head_dir;
 	while(head_dir != NULL)
 	{
 		if (flag->fl_R == 1)
@@ -79,6 +85,8 @@ void	yes_dir(t_flag *flag, int argc, char **argv, int i)
 			//if (i < argc && check != 0 && num_d > 0/*check_afile(head, argv[i - 1]) != 0*/)
 				//ft_printf("\n");
 	}
+	free_lst(&fr);
+	//system("leaks ft_ls");
 }
 
 

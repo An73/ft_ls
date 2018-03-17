@@ -46,7 +46,7 @@ void	pre_w(t_pre *pre, char *direct, t_flag *flag)
 			if (sd->d_type == 10)
 			{
 				fr = putb(direct, sd->d_name);
-				lstat(putb(direct, sd->d_name), &line);
+				lstat(fr, &line);
 				free(fr);
 			}
 			else
