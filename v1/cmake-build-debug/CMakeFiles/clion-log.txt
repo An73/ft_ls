@@ -1,5 +1,0 @@
-/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/dkotenko/EX/ft_ls/v1
--- Configuring done
-WARNING: Target "ft_ls" requests linking to directory "/Users/dkotenko/EX/ft_ls/v1".  Targets may link only to libraries.  CMake is dropping the item.
--- Generating done
--- Build files have been written to: /Users/dkotenko/EX/ft_ls/v1/cmake-build-debug
